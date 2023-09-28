@@ -1,4 +1,4 @@
-# WEB STACK IMPLEMENTATION (LEMP STACK)
+![Screenshot from 2023-09-28 14-16-29](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/0af29e6b-2021-44b6-a8d4-36d1c2b62f77)# WEB STACK IMPLEMENTATION (LEMP STACK)
 ## Step 0 - Preparing prerequisites
 ### Connecting to Ubuntu Server.
 $ ssh -i LEMP_stack.pem ubuntu@44.201.246.18
@@ -102,4 +102,80 @@ $ http://44.201.246.18/
 $ http://ec2-44-201-246-18.compute-1.amazonaws.com
 ![Screenshot from 2023-09-28 11-52-29](https://github.com/PromiseNwachukwu/my-portfolio1/assets/109115304/813a44c4-9c09-420c-98d0-5a66ad2f39da)
 
-## LEMP stack is now fully configured.
+### LEMP stack is now fully configured and operational.
+
+## Step 5 – Testing PHP with Nginx
+
+### Testing the LAMP stack to validate that Nginx can correctly hand .php files off to your PHP processor.
+$ Create a test PHP file in your document root.
+
+$ Open a new file called info.php within your document root in your text editor:
+
+$ nano /var/www/projectLEMP/info.php
+![Screenshot from 2023-09-28 12-30-55](https://github.com/PromiseNwachukwu/my-portfolio1/assets/109115304/f64fd0f0-6115-4e2c-bb11-365acb815a1f)
+
+### To access this page on the web browser by visiting the domain name or public IP address set up in the Nginx configuration file, followed by /info.php.
+$ http://44.201.246.18/info.php
+![Screenshot from 2023-09-28 12-34-34](https://github.com/PromiseNwachukwu/my-portfolio1/assets/109115304/9f312d94-c806-4890-9030-4187e12332e3)
+
+### After checking the relevant information about the PHP server through that page, it’s best to remove the file created as it contains sensitive information about the PHP environment and Ubuntu server. This file cab always be regenerated if the need arises.
+$ sudo rm /var/www/your_domain/info.php
+![Screenshot from 2023-09-28 12-55-32](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/781d84fd-5e65-4291-99a2-14d36840d95b)
+
+# Step 6 — Retrieving data from MySQL database with PHP
+### First, to create a database named emeka_database and a user named emeka_user
+$ mysql> CREATE DATABASE `emeka_database`;
+![Screenshot from 2023-09-28 13-26-20](https://github.com/PromiseNwachukwu/my-portfolio1/assets/109115304/53c9e51d-d9d1-4293-a42f-736001fccc03)
+
+### To create a user named emeka_user
+$ mysql>  CREATE USER 'emeka_user'@'%' IDENTIFIED WITH mysql_native_password BY 'Password@1';
+![Screenshot from 2023-09-28 13-32-49](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/a649cceb-b7ed-41aa-abf9-29f2cb5d61d1)
+
+### To give emeka_user permission over the emeka_database database:
+### This will give the emeka_user user full privileges over the emeka_database database, while preventing this user from creating or modifying other databases on your server.
+$ mysql> GRANT ALL ON emeka_database.* TO 'emeka_user'@'%';
+![Screenshot from 2023-09-28 13-39-43](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/78afffca-572b-4386-8df2-f3ac1ca45de7)
+
+### To exit the MySQL shell with:
+$ mysql> exit
+![Screenshot from 2023-09-28 13-45-03](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/27616900-6fdf-4e64-befe-af928a648647)
+
+### To test if the new user has the proper permissions by logging in to the MySQL console again, this time using the custom user credentials:
+$ mysql -u emeka_user -p
+![Screenshot from 2023-09-28 13-46-58](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/ec9cb398-a8b4-4aa8-b555-f55473991f3a)
+
+### To confirm that emeka_user has access to the emeka_database database:
+$ mysql> SHOW DATABASES;
+![Screenshot from 2023-09-28 13-50-55](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/c1007b00-f5ed-4129-855c-bfa38429acf2)
+
+### To create a test table named todo_list. From the MySQL console, run the following statement:
+$ CREATE TABLE emeka_database.todo_list (item_id INT AUTO_INCREMENT,content VARCHAR(255),PRIMARY KEY(item_id));
+![Screenshot from 2023-09-28 13-54-15](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/8bd77d89-59c6-4fc9-9034-4342eb73946c)
+
+### To insert a few rows of content in the test table. Repeat the command a few times, using different VALUES:
+$ mysql> INSERT INTO emeka_database.todo_list (content) VALUES ("My first important item");
+![Screenshot from 2023-09-28 14-02-05](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/4e62ec51-7d5c-42d6-8e63-9650bf510e5d)
+
+### To confirm that the data was successfully saved tothe table:
+$ mysql>  SELECT * FROM emeka_database.todo_list;
+![Screenshot from 2023-09-28 14-07-38](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/8d09de81-5755-4946-8c18-f2ca5de0fcc5)
+
+### To exit after confirmaton.
+$ mysql> exit
+![Screenshot from 2023-09-28 14-09-30](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/72af8567-3106-4eb2-9099-09d996b91a27)
+
+### To create a PHP script that will connect to MySQL and query for your content. 
+#### Create a new PHP file in your custom web root directory using your preferred editor. We’ll use vi for that:
+$ nano /var/www/projectLEMP/todo_list.php
+![Screenshot from 2023-09-28 14-16-29](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/3e30dbef-3611-4084-9660-aa461dc2845f)
+
+### To access this page on the web browser by visiting the public IP or domain name address configured for your website, followed by /todo_list.php:
+$ http://44.201.246.18/todo_list.php
+![Screenshot from 2023-09-28 14-27-20](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/69ac507e-83e1-4f98-bbaa-e2ed72cf884a)
+
+$ http://ec2-44-201-246-18.compute-1.amazonaws.com/todo_list.php
+![Screenshot from 2023-09-28 14-29-17](https://github.com/PromiseNwachukwu/-Web-Stack-Implementation-LEMP-Stack-in-AWS/assets/109115304/07ed4e89-7966-424b-8e59-a1c23e5fda7b)
+
+### The PHP environment is ready to connect and interact with your MySQL server.
+
+### We have now succeeded in building a flexible foundation for serving PHP websites and applications, using Nginx as web server and MySQL as database management system.
